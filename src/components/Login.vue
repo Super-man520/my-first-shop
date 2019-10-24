@@ -42,7 +42,7 @@ export default {
   methods: {
     loginBtn () {
       this.$refs.form.validate((valid, obj) => {
-        console.log(obj)
+        // console.log(obj)
         if (!valid) {
           this.$message({
             showClose: true,
@@ -60,9 +60,11 @@ export default {
           data: this.form
         }).then(res => {
           // 解构
-          const { meta } = res.data
-          // console.log(res.data)
+          console.log(res.data)
+          const { meta, data } = res.data
           if (meta.status === 200) {
+            // 登录成功存储token到本地
+            localStorage.setItem('token', data.token)
             this.$message({
               message: meta.msg,
               type: 'success',
