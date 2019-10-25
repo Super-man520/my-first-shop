@@ -12,7 +12,7 @@
     <el-button type="success" plain @click="addUser">添加用户</el-button>
   <!-- 表格 -->
   <!-- prop属性来对应对象的键名 label属性定义表格的列名 data注入数据 -->
-   <el-table :data="userList" style="width: 100%">
+   <el-table :data="userList" style="width: 100%" >
     <el-table-column prop="username" label="姓名" width="200"></el-table-column>
     <el-table-column prop="email" label="邮箱" width="200"></el-table-column>
     <el-table-column prop="mobile" label="电话" width="200"></el-table-column>
@@ -62,7 +62,7 @@
       <el-input v-model="form.email" autocomplete="off"></el-input>
     </el-form-item>
      <el-form-item label="手机" :label-width="formLabelWidth" prop="mobile">
-      <el-input v-model="form.mobile" autocomplete="off"></el-input>
+      <el-input v-model="form.mobile" autocomplete="off" maxlength="11"></el-input>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -101,12 +101,12 @@
       <el-input v-model="form3.email" autocomplete="off"></el-input>
     </el-form-item>
      <el-form-item label="手机" :label-width="formLabelWidth" prop="mobile">
-      <el-input v-model="form3.mobile" autocomplete="off"></el-input>
+      <el-input v-model="form3.mobile" autocomplete="off" maxlength="11"></el-input>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="cancelAdd">取 消</el-button>
-    <el-button type="primary" @click="sureEdit(form3)">确 定</el-button>
+    <el-button type="primary" @click="sureEdit3(form3)">确 定</el-button>
   </div>
 </el-dialog>
   </div>
@@ -128,6 +128,10 @@ export default {
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
+      // 邮箱校验格式
+      regEmail: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+      // 手机校验格式
+      regMobile: /^1[3456789]\d{9}$/,
       form: {
         email: '',
         mobile: '',
@@ -148,11 +152,11 @@ export default {
       rules: {
         email: [
           { required: true, message: '请输入用户邮箱', trigger: ['change', 'blur'] },
-          { min: 3, max: 28, message: '长度在 3 到 28 个字符', trigger: ['blur', 'change'] }
+          { min: 10, max: 28, message: '长度在 10 到 28 个字符', trigger: ['blur', 'change'] }
         ],
         mobile: [
           { required: true, message: '请输入用户电话', trigger: ['change', 'blur'] },
-          { min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: ['blur', 'change'] }
+          { min: 10, max: 11, message: '长度在 11 个字符', trigger: ['blur', 'change'] }
         ]
       }
     }
@@ -192,14 +196,12 @@ export default {
       // 查询参数query  当前页码 pagenum  每页显示个数pagesize
       this.pagesize = val
       // console.log(val)
-
       // console.log(`每页 ${val} 条`)
       this.getUserList()
     },
     handleCurrentChange (val) {
       this.pagenum = val
       // console.log(val)
-
       // console.log(`当前页: ${val}`)
       this.getUserList()
     },
@@ -213,6 +215,14 @@ export default {
     },
     // 点击确定修改
     sureEdit (form) {
+      if (!this.regEmail.test(this.form.email)) {
+        this.$message.error('邮箱格式错误')
+        return
+      }
+      if (!this.regMobile.test(this.form.mobile)) {
+        this.$message.error('请输入有效手机号')
+        return
+      }
       this.$refs.form.validate((vaild) => {
         if (!vaild) return
         console.log(this.form)
@@ -252,6 +262,17 @@ export default {
     cancelAdd () {
       this.showEdit3 = false
       this.$refs.form3.resetFields()
+    },
+    sureEdit3 (info) {
+      if (!this.regEmail.test(this.form3.email)) {
+        this.$message.error('邮箱格式错误')
+        return
+      }
+      if (!this.regMobile.test(this.form3.mobile)) {
+        this.$message.error('请输入有效手机号')
+        return
+      }
+      console.log(info)
     }
   }
 }
@@ -260,14 +281,10 @@ export default {
 <style lang="less" scoped>
 .el-table {
   margin-top: 20px;
+  .el-table-column {
+  text-align: center;
+  }
 }
- .el-table .warning-row {
-    background: oldlace;
-  }
-
-  .el-table .success-row {
-    background: #f0f9eb;
-  }
   .block {
     margin-top: 15px;
   }

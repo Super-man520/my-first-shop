@@ -3,7 +3,7 @@
     <el-container class="index">
       <el-header>
         <div class="logo">
-          <img src="../assets/heima.png" alt />
+          <img src="../assets/0010.jpg" alt />
         </div>
         <div class="title">
           <h1>电商后台管理系统</h1>
