@@ -279,6 +279,7 @@ export default {
         this.$message.error('请输入有效手机号')
         return
       }
+      this.showEdit3 = false
       console.log(info)
     }
   }
