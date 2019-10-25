@@ -1,13 +1,15 @@
 <template>
   <div class="users">
     <!-- 面包屑 -->
-<el-breadcrumb separator-class="el-icon-arrow-right">
-  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+  <el-breadcrumb separator-class="el-icon-arrow-right">
+  <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
   <el-breadcrumb-item>用户管理</el-breadcrumb-item>
   <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+  </el-breadcrumb>
+  <span class="line"></span>
   <!-- 搜索框 -->
-  <el-input placeholder="请输入搜索关键字" class="input-with-select search">
-      <el-button slot="append" icon="el-icon-search" ></el-button>
+  <el-input placeholder="请输入搜索关键字" class="input-with-select search" v-model="keyWords">
+      <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
     </el-input>
     <el-button type="success" plain @click="addUser">添加用户</el-button>
   <!-- 表格 -->
@@ -27,7 +29,7 @@
       </el-switch>
      </template>
      </el-table-column>
-     <el-table-column prop="caozuo" label="操作">
+     <el-table-column prop="handle" label="操作">
         <template v-slot:default="obj">
        <el-row>
           <el-button type="primary" icon="el-icon-edit" plain @click="editUser(obj.row)"></el-button>
@@ -37,7 +39,6 @@
        </template>
      </el-table-column>
   </el-table>
-</el-breadcrumb>
 <!-- 分页 -->
 <template>
    <div class="block">
@@ -117,6 +118,7 @@ import axios from 'axios'
 export default {
   data () {
     return {
+      keyWords: '',
       userList: [],
       // 查询参数query  当前页码 pagenum  每页显示个数pagesize
       query: '',
@@ -190,6 +192,11 @@ export default {
           this.$message.success(meta.msg)
         }
       })
+    },
+    // 搜索关键字
+    search () {
+      console.log(this.keyWords)
+      this.keyWords = ''
     },
     // 分页
     handleSizeChange (val) {
@@ -293,4 +300,12 @@ export default {
     margin-right: 10px;
     margin-top: 20px;
   }
+  .line {
+  position: absolute;
+  width: 85%;
+  height: 3px;
+  background-color: #888;
+  top: 125px;
+  right: 12px;
+}
 </style>
