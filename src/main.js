@@ -51,7 +51,7 @@ axios.interceptors.response.use(function (response) {
     //   duration: 1200
     // })
     response.meta.msg = '登录已过期，请登录'
-    // 提出本地存储的token
+    // 移除本地存储的token
     localStorage.removeItem('token')
     // 并拦截到登录界面
     // this.$router = router

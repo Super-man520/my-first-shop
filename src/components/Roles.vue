@@ -85,6 +85,8 @@ export default {
         if (meta.status === 200) {
           this.$message.success(meta.msg)
           this.roleList = data
+        } else {
+          this.$message.warning(meta.msg)
         }
       })
     },

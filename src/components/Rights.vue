@@ -43,6 +43,8 @@ export default {
         if (meta.status === 200) {
           this.$message.success(meta.msg)
           this.rightsList = data
+        } else {
+          this.$message.error(meta.msg)
         }
       })
     },
