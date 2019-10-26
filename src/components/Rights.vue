@@ -33,13 +33,13 @@ export default {
       var $url = `http://localhost:8888/api/private/v1/rights/tree`
       axios.get($url, {
         // `headers` 是即将被发送的自定义请求头
-        headers: {
-          // 需将token一起发送
-          Authorization: localStorage.getItem('token')
-        }
+        // headers: {
+        //   // 需将token一起发送
+        //   Authorization: localStorage.getItem('token')
+        // }
       }).then(res => {
-        console.log(res.data)
-        const { data, meta } = res.data
+        console.log(res)
+        const { data, meta } = res
         if (meta.status === 200) {
           this.$message.success(meta.msg)
           this.rightsList = data

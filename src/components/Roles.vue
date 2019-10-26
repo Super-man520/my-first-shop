@@ -75,12 +75,12 @@ export default {
       var $url = `http://localhost:8888/api/private/v1/roles`
       axios.get($url, {
         // `headers` 是即将被发送的自定义请求头
-        headers: {
-          // 需将token一起发送
-          Authorization: localStorage.getItem('token')
-        }
+        // headers: {
+        //   // 需将token一起发送
+        //   Authorization: localStorage.getItem('token')
+        // }
       }).then(res => {
-        const { data, meta } = res.data
+        const { data, meta } = res
         console.log(data, meta)
         if (meta.status === 200) {
           this.$message.success(meta.msg)

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 export default {
   data () {
     return {
@@ -54,14 +54,15 @@ export default {
         }
         // axios.post(url, data).then(response).catch(error)  catch错误函数
         // 发送ajax
-        axios({
+        this.$axios({
           method: 'post',
-          url: 'http://localhost:8888/api/private/v1/login',
+          // url: 'http://localhost:8888/api/private/v1/login',
+          url: 'login',
           data: this.form
         }).then(res => {
           // 解构
-          console.log(res.data)
-          const { meta, data } = res.data
+          console.log(res)
+          const { meta, data } = res
           if (meta.status === 200) {
             // 登录成功存储token到本地
             localStorage.setItem('token', data.token)

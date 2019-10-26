@@ -8,7 +8,7 @@
   </el-breadcrumb>
   <!-- <span class="line"></span> -->
   <!-- 搜索框 -->
-  <el-input placeholder="请输入搜索关键字" class="input-with-select search" v-model="keyWords">
+  <el-input placeholder="请输入搜索关键字" class="input-with-select search" v-model="query">
       <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
     </el-input>
     <el-button type="success" plain @click="addUser">添加用户</el-button>
@@ -25,7 +25,7 @@
        <el-switch
           v-model="obj.row.mg_state"
           active-color="#13ce66"
-          inactive-color="#ff4949">
+          inactive-color="#ff4949" @change="updateState(obj.row.id,obj.row.mg_state)">
       </el-switch>
      </template>
      </el-table-column>
@@ -114,19 +114,19 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 export default {
   data () {
     return {
-      keyWords: '',
+      id: null,
+      // url: 'http://localhost:8888/api/private/v1/users/',
+      query: '',
       userList: [],
       // 查询参数query  当前页码 pagenum  每页显示个数pagesize
-      query: '',
       pagenum: 1,
       pagesize: 2,
       totalPage: null,
       // 用户数据
-      dialogTableVisible: false,
       showEdit: false,
       showEdit2: false,
       showEdit3: false,
@@ -170,33 +170,37 @@ export default {
   methods: {
     // 一进入页面即要发送axios
     getUserList () {
-      var $url = `http://localhost:8888/api/private/v1/users`
-      axios.get($url, {
-        // axios.get(url[, config]) params 是即将与请求一起发送的 URL 参数
+      // var $url = this.url
+      this.$axios.get('users', {
+        // this.$axios.get(url[, config]) params 是即将与请求一起发送的 URL 参数
         params: {
           query: this.query,
           pagenum: this.pagenum,
           pagesize: this.pagesize
-        },
-        // `headers` 是即将被发送的自定义请求头
-        headers: {
-          // 需将token一起发送
-          Authorization: localStorage.getItem('token')
         }
+        // `headers` 是即将被发送的自定义请求头
+        // headers: {
+        //   // 需将token一起发送
+        //   Authorization: localStorage.getItem('token')
+        // }
       }).then(res => {
-        console.log(res.data)
-        const { data, meta } = res.data
-        this.totalPage = data.total
+        console.log(res)
+        const { data, meta } = res
         if (meta.status === 200) {
+          this.totalPage = data.total
           this.userList = data.users
           this.$message.success(meta.msg)
+        } else {
+          this.$message(meta.msg)
         }
       })
     },
     // 搜索关键字
     search () {
-      console.log(this.keyWords)
-      this.keyWords = ''
+      console.log(this.query)
+      this.pagenum = 1
+      this.getUserList()
+      this.query = ''
     },
     // 分页
     handleSizeChange (val) {
@@ -212,9 +216,28 @@ export default {
       // console.log(`当前页: ${val}`)
       this.getUserList()
     },
+    // 更新用户状态
+    updateState (id, state) {
+      console.log(id, state)
+      var $url = `users/${id}/state/${state}`
+      this.$axios.put($url, {
+        // `headers` 是即将被发送的自定义请求头
+        // headers: {
+        //   // 需将token一起发送
+        //   Authorization: localStorage.getItem('token')
+        // }
+      }).then(res => {
+        console.log(res)
+        const { meta } = res
+        if (meta.status === 200) {
+          this.$message.success(meta.msg)
+        }
+      })
+    },
     // 修改用户显示框的内容
     editUser (info) {
-      // console.log(info)
+      console.log(info)
+      this.id = info.id
       this.showEdit = true
       this.form.text = info.username
       this.form.email = info.email
@@ -233,6 +256,16 @@ export default {
       this.$refs.form.validate((vaild) => {
         if (!vaild) return
         console.log(this.form)
+        this.$axios.put(`users/${this.id}`, this.form).then(res => {
+          console.log(res)
+          const { meta } = res
+          if (meta.status === 200) {
+            this.getUserList()
+            this.$message.success(meta.msg)
+          } else {
+            this.$message.error(meta.msg)
+          }
+        })
         this.showEdit = false
       })
     },
@@ -245,9 +278,24 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        console.log(info.id)
         this.$message({
           type: 'success',
           message: '删除成功!'
+        })
+        this.$axios.delete(`users/${info.id}`).then(res => {
+          console.log(res)
+          const { meta } = res
+          if (meta.status === 200) {
+            this.$message.success(meta.msg)
+            // 如果当前页只有一条数据  删除后当前页为空
+            if (this.userList.length === 1 && this.pagenum > 1) {
+              this.pagenum--
+            }
+            this.getUserList()
+          } else {
+            this.$message.error(meta.msg)
+          }
         })
       }).catch(() => {
         this.$message({
@@ -281,6 +329,18 @@ export default {
       }
       this.showEdit3 = false
       console.log(info)
+      this.$axios.post('users', info).then(res => {
+        console.log(res)
+        const { meta } = res
+        if (meta.status === 201) {
+          // this.pagenum = 1
+          this.getUserList()
+          this.$message.success(meta.msg)
+          this.$refs.form3.resetFields()
+        } else {
+          this.$message.warning(meta.msg)
+        }
+      })
     }
   }
 }
