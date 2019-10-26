@@ -374,3 +374,9 @@ export default {
   border-bottom: 1px solid #666;
 }
 </style>
+<style lang="less">
+ th,
+ td {
+   text-align: center !important;
+ }
+</style>
