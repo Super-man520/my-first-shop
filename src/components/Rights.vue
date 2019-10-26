@@ -6,7 +6,7 @@
     <el-breadcrumb-item>权限管理</el-breadcrumb-item>
     <el-breadcrumb-item>角色列表</el-breadcrumb-item>
     </el-breadcrumb>
-    <span class="line"></span>
+    <!-- <span class="line"></span> -->
     <!-- 表格 border带竖直方向的边框-->
     <el-table :data="rightsList" border style="width: 100%">
       <el-table-column type="index" label="序号" width="80" :index="indexMethod"></el-table-column>
@@ -64,5 +64,9 @@ export default {
 }
 .el-table {
   margin-top: 32px;
+}
+.el-breadcrumb {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #666;
 }
 </style>

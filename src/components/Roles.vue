@@ -6,7 +6,7 @@
     <el-breadcrumb-item>权限管理</el-breadcrumb-item>
     <el-breadcrumb-item>角色列表</el-breadcrumb-item>
     </el-breadcrumb>
-    <span class="line"></span>
+    <!-- <span class="line"></span> -->
     <!-- 添加角色 -->
     <el-button plain type="success" class="add-role" @click="addRole">添加角色</el-button>
     <!-- 表格 -->
@@ -125,6 +125,10 @@ export default {
   right: 12px;
 }
 .add-role {
-  margin: 26px 0 16px;
+  margin: 16px 0 16px;
+}
+.el-breadcrumb {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #666;
 }
 </style>

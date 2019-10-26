@@ -6,7 +6,7 @@
   <el-breadcrumb-item>用户管理</el-breadcrumb-item>
   <el-breadcrumb-item>用户列表</el-breadcrumb-item>
   </el-breadcrumb>
-  <span class="line"></span>
+  <!-- <span class="line"></span> -->
   <!-- 搜索框 -->
   <el-input placeholder="请输入搜索关键字" class="input-with-select search" v-model="keyWords">
       <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
@@ -308,5 +308,9 @@ export default {
   background-color: #888;
   top: 125px;
   right: 12px;
+}
+.el-breadcrumb {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #666;
 }
 </style>
