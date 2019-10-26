@@ -107,7 +107,7 @@
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="cancelAdd">取 消</el-button>
-    <el-button type="primary" @click="sureEdit3(form3)">确 定</el-button>
+    <el-button type="primary" @click="sureAdd(form3)">确 定</el-button>
   </div>
 </el-dialog>
   </div>
@@ -270,7 +270,7 @@ export default {
       this.showEdit3 = false
       this.$refs.form3.resetFields()
     },
-    sureEdit3 (info) {
+    sureAdd (info) {
       if (!this.regEmail.test(this.form3.email)) {
         this.$message.error('邮箱格式错误')
         return
