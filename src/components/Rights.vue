@@ -9,16 +9,23 @@
     <!-- <span class="line"></span> -->
     <!-- 表格 border带竖直方向的边框-->
     <el-table :data="rightsList" border style="width: 100%">
-      <el-table-column type="index" label="序号" width="80" :index="indexMethod"></el-table-column>
+      <el-table-column type="index" label="序号" width="80"></el-table-column>
       <el-table-column prop="authName" label="权限名称" width="200"></el-table-column>
       <el-table-column prop="path" label="路径" width="200"></el-table-column>
-      <el-table-column prop="level" label="层级"></el-table-column>
+      <el-table-column label="层级">
+        <template v-slot:default="{row}">
+          <!-- {{row}} -->
+          <el-tag v-if="row.level==='0'">一级</el-tag>
+          <el-tag type="success" v-if="row.level==='1'">二级</el-tag>
+          <el-tag type="danger" v-if="row.level==='2'">三级</el-tag>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 export default {
   data () {
     return {
@@ -30,8 +37,8 @@ export default {
   },
   methods: {
     getRightsList () {
-      var $url = `http://localhost:8888/api/private/v1/rights/tree`
-      axios.get($url, {
+      // var $url = `http://localhost:8888/api/private/v1/rights/list`
+      this.$axios.get('rights/list', {
         // `headers` 是即将被发送的自定义请求头
         // headers: {
         //   // 需将token一起发送
@@ -47,10 +54,10 @@ export default {
           this.$message.error(meta.msg)
         }
       })
-    },
-    indexMethod (index) {
-      return index + 1
     }
+    // indexMethod (index) {
+    //   return index + 1
+    // }
   }
 }
 </script>
@@ -65,7 +72,7 @@ export default {
   right: 12px;
 }
 .el-table {
-  margin-top: 32px;
+  margin-top: 20px;
 }
 .el-breadcrumb {
   padding-bottom: 10px;
