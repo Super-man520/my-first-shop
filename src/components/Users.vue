@@ -109,6 +109,12 @@
     <el-button @click="cancelAdd">取 消</el-button>
     <el-button type="primary" @click="sureAdd(form3)">确 定</el-button>
   </div>
+  <!-- <template v-slot:footer>
+    <div class="dialog-footer">
+    <el-button @click="cancelAdd">取 消</el-button>
+    <el-button type="primary" @click="sureAdd(form3)">确 定</el-button>
+  </div>
+  </template> -->
 </el-dialog>
   </div>
 </template>
@@ -334,6 +340,9 @@ export default {
         const { meta } = res
         if (meta.status === 201) {
           // this.pagenum = 1
+          // 跳转到当前页
+          this.totalPage++
+          this.pagenum = Math.ceil(this.totalPage / this.pagesize)
           this.getUserList()
           this.$message.success(meta.msg)
           this.$refs.form3.resetFields()

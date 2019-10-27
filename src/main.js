@@ -20,6 +20,7 @@ console.log(Vue.prototype)
 
 Vue.prototype.$axios = axios
 
+// 设置基准url
 axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
 
 // 是否显示打印信息
@@ -50,7 +51,7 @@ axios.interceptors.response.use(function (response) {
     //   type: 'warning',
     //   duration: 1200
     // })
-    response.meta.msg = '登录已过期，请登录'
+    response.meta.msg = '登录已过期，请重新登录'
     // 移除本地存储的token
     localStorage.removeItem('token')
     // 并拦截到登录界面

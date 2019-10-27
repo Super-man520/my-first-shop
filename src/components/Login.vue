@@ -4,10 +4,11 @@
   <!-- form表单提供了校验功能，只需要通过rules属性传入校验规则，并将form-item的prop属性设置为需要校验的字段即可 status-icon反馈图标-->
   <el-form :model="form" :rules="rules" label-width="100px" class="demo-ruleForm" ref="form" status-icon>
   <el-form-item label="username" prop="username">
-    <el-input v-model="form.username" type="text" placeholder="username"></el-input>
+    <!-- .native可以给组件根元素注册原生事件 -->
+    <el-input v-model="form.username" type="text" placeholder="username" @keyup.enter.native="loginBtn"></el-input>
   </el-form-item>
   <el-form-item label="password" prop="password">
-    <el-input v-model="form.password" type="password" placeholder="password"></el-input>
+    <el-input v-model="form.password" type="password" placeholder="password" @keyup.enter.native="loginBtn"></el-input>
   </el-form-item>
   <el-form-item>
   <el-button type="success" class="loginBtn" @click="loginBtn">login</el-button>
