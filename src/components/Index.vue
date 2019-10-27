@@ -17,16 +17,8 @@
         <i class="el-icon-s-unfold unfold" v-show="flag" @click="showAside"></i>
         <i class="el-icon-s-fold fold" v-show="!flag" @click="hideAside"></i>
         <el-aside width="200px" ref="myAside">
-          <!-- unique-opened只展开一个子菜单  router当前页可跳转  default-active默认高亮-->
-          <el-menu
-            router
-            unique-opened
-            default-active="1"
-            class="el-menu-vertical-demo"
-            background-color="#545c64"
-            text-color="#fff"
-            active-text-color="#ffd04b"
-          >
+          <!-- unique-opened只展开一个子菜单  router当前页可跳转  default-active默认高亮 分组名可以通过title属性直接设定，也可以通过具名 slot 来设定。-->
+          <el-menu router unique-opened default-active="1" class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" >
             <!-- index标识-->
             <el-submenu index="1">
               <!-- 标题 -->
@@ -49,6 +41,39 @@
               </el-menu-item>
               <el-menu-item index="/rights">
                 <i class="el-icon-menu"></i>权限列表
+              </el-menu-item>
+            </el-submenu>
+            <el-submenu index="3">
+              <template v-slot:title>
+                <i class="el-icon-location"></i>
+                <span>商品管理</span>
+              </template>
+              <el-menu-item index="/goods">
+                <i class="el-icon-menu"></i>商品列表
+              </el-menu-item>
+              <el-menu-item index="/params">
+                <i class="el-icon-menu"></i>分类参数
+              </el-menu-item>
+              <el-menu-item index="/categories">
+                <i class="el-icon-menu"></i>商品分类
+              </el-menu-item>
+            </el-submenu>
+             <el-submenu index="4">
+              <template v-slot:title>
+                <i class="el-icon-location"></i>
+                <span>订单管理</span>
+              </template>
+              <el-menu-item index="/orders">
+                <i class="el-icon-menu"></i>订单列表
+              </el-menu-item>
+            </el-submenu>
+             <el-submenu index="5">
+              <template v-slot:title>
+                <i class="el-icon-location"></i>
+                <span>数据统计</span>
+              </template>
+              <el-menu-item index="/reports">
+                <i class="el-icon-menu"></i>数据列表
               </el-menu-item>
             </el-submenu>
           </el-menu>
@@ -158,7 +183,7 @@ export default {
   .fold {
     font-size: 32px;
     color: #e92322;
-    position: absolute;
+    position: fixed;
     z-index: 99;
     bottom: 0;
     left: 160px;

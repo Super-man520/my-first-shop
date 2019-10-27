@@ -9,9 +9,9 @@
     <!-- <span class="line"></span> -->
     <!-- 表格 border带竖直方向的边框-->
     <el-table :data="rightsList" border style="width: 100%">
-      <el-table-column type="index" label="序号" width="80"></el-table-column>
-      <el-table-column prop="authName" label="权限名称" width="200"></el-table-column>
-      <el-table-column prop="path" label="路径" width="200"></el-table-column>
+      <el-table-column type="index" label="序号" width="100"></el-table-column>
+      <el-table-column prop="authName" label="权限名称" width="300"></el-table-column>
+      <el-table-column prop="path" label="路径" width="300"></el-table-column>
       <el-table-column label="层级">
         <template v-slot:default="{row}">
           <!-- {{row}} -->
