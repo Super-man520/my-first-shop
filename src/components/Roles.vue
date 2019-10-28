@@ -86,8 +86,8 @@
 <el-dialog title="分配权限" :visible.sync="assigningUser" width="30%">
   <span>这是一段信息</span>
   <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    <el-button @click="assigningUser = false">取 消</el-button>
+    <el-button type="primary" @click="assigningUser = false">确 定</el-button>
   </span>
 </el-dialog>
   </div>

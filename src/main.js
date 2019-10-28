@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './style/common.css'
 import './font/font.less'
 // import './style/index.less'
+import moment from 'moment'
 
 // 接收router
 import router from './router'
@@ -25,6 +26,11 @@ axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
 
 // 是否显示打印信息
 Vue.config.productionTip = false
+
+// 过滤器处理时间戳
+Vue.filter('timer', (value, str = 'YYYY-MM-DD  hh:mm:ss') => {
+  return moment(value * 1000).format(str)
+})
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {

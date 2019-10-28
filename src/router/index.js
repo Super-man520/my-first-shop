@@ -10,6 +10,7 @@ import Params from '../components/Params.vue'
 import Categories from '../components/Categories.vue'
 import Orders from '../components/Orders.vue'
 import Reports from '../components/Reports.vue'
+import GoodsAdd from '../components/Goods-add.vue'
 
 Vue.use(VueRouter)
 
@@ -29,7 +30,14 @@ const routes = [
       { path: '/users', name: 'users', component: Users },
       { path: '/rights', name: 'rights', component: Rights },
       { path: '/roles', name: 'roles', component: Roles },
-      { path: '/goods', name: 'goods', component: Goods },
+      { path: '/goods',
+        name: 'goods',
+        component: Goods
+        // children: [
+        //   { path: '/goods-add', name: 'goods-add', component: GoodsAdd }
+        // ]
+      },
+      { path: '/goods-add', name: 'goods-add', component: GoodsAdd },
       { path: '/params', name: 'params', component: Params },
       { path: '/categories', name: 'categories', component: Categories },
       { path: '/orders', name: 'orders', component: Orders },
