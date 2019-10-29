@@ -33,17 +33,17 @@
   </div>
   <!-- 显示编辑的框 -->
   <el-dialog title="编辑分类" :visible.sync="editCategories" width="30%">
-  <el-form :model="form" ref="form" :rules="rules" status-icon>
+  <el-form :model="form" ref="form" :rules="rules" status-icon >
     <el-form-item label="分类名称" :label-width="formLabelWidth" prop="cat_name">
       <el-input v-model="form.cat_name" autocomplete="off"></el-input>
     </el-form-item>
-     <el-form-item label="是否有效" :label-width="formLabelWidth" prop="cat_deleted">
-      <el-input v-model="form.cat_deleted" autocomplete="off"></el-input>
+     <el-form-item label="是否有效" :label-width="formLabelWidth">
+      <el-button disabled type="success">{{form.isDelete}}</el-button>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="editCategories = false">取 消</el-button>
-    <el-button type="primary" @click="editCategories = false">确 定</el-button>
+    <el-button type="primary" @click="sureEditCategories">确 定</el-button>
    </div>
   </el-dialog>
   <!-- 添加分类框 -->
@@ -61,7 +61,7 @@
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="addCategories = false">取 消</el-button>
-    <el-button type="primary" @click="addCategories = false">确 定</el-button>
+    <el-button type="primary" @click="sureAddCategories">确 定</el-button>
    </div>
   </el-dialog>
 </div>
@@ -79,7 +79,7 @@ export default {
       loading: false,
       // pagenum 当前页  pagesize每页个数   totalPage总页数
       categoriesList: [],
-      type: 2,
+      type: 3,
       pagenum: 1,
       pagesize: 3,
       totalPage: null,
@@ -89,18 +89,15 @@ export default {
       addCategories: false,
       form: {
         cat_name: '',
-        cat_deleted: ''
+        isDelete: ''
       },
       form2: {
         cat_name: '',
         cat_pid: []
+        // cat_level: 1
       },
       rules: {
         cat_name: [
-          { required: true, message: '此项必填', trigger: ['blur', 'change'] },
-          { min: 6, max: 20, message: '字符6~20之间', trigger: ['blur', 'change'] }
-        ],
-        cat_deleted: [
           { required: true, message: '此项必填', trigger: ['blur', 'change'] },
           { min: 6, max: 20, message: '字符6~20之间', trigger: ['blur', 'change'] }
         ]
@@ -147,13 +144,62 @@ export default {
     },
     handleChange (val) {
       console.log(val)
+      // 分类父id
+      this.id = val[0]
+      console.log(this.id)
+    },
+    sureAddCategories () {
+      console.log(this.id)
+      this.$refs.form2.validate((valid) => {
+        if (!valid) {
+          this.$message.error('添加失败')
+        } else {
+          // const cat_level = 1
+          this.$axios.post(`categories`, {
+            cat_pid: this.id,
+            cat_name: this.form2.cat_name,
+            // cat_level: this.form2.cat_level
+            cat_level: 1
+          }).then(res => {
+            console.log(res)
+            const { meta } = res
+            if (meta.status === 201) {
+              this.$message.success(meta.msg)
+              // this.getCategoriesList()
+              this.addCategories = false
+            } else {
+              this.$message.error(meta.msg)
+            }
+          })
+        }
+      })
     },
     // 显示编辑框
     showCategories (info) {
+      console.log(info)
+      this.form.isDelete = info.cat_deleted ? '否' : '是'
       this.editCategories = true
-      // this.id = info.cat_id
-      console.log(info.id)
+      this.id = info.cat_id
       this.form.cat_name = info.cat_name
+    },
+    sureEditCategories () {
+      this.$refs.form.validate((valid) => {
+        if (!valid) {
+          this.$message.error('内部错误')
+        } else {
+          this.$axios.put(`categories/${this.id}`, this.form).then(res => {
+            console.log(res)
+            const { meta } = res
+            if (meta.status === 200) {
+              this.$message.success(meta.msg)
+              this.getCategoriesList()
+              this.editCategories = false
+            } else {
+              this.$message.error(meta.msg)
+            }
+          })
+        }
+      })
     },
     // 删除分类
     delCategories (info) {

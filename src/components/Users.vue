@@ -71,22 +71,22 @@
     <el-button type="primary" @click="sureEdit(form)">确 定</el-button>
   </div>
 </el-dialog>
-<!-- 分配用户的显示框 -->
+<!-- 分配用户角色的显示框 -->
 <el-dialog title="分配角色" :visible.sync="showEdit2" width="30%">
   <el-form :model="form2">
     <el-form-item label="用户名" :label-width="formLabelWidth">
       <el-button disabled>{{form2.user}}</el-button>
     </el-form-item>
     <el-form-item label="角色列表" :label-width="formLabelWidth">
-      <el-select v-model="form2.region" placeholder="请选择角色名">
-        <el-option label="角色一" value="role1"></el-option>
-        <el-option label="角色二" value="role2"></el-option>
+      <!-- roleRid绑定角色id可以默认显示 -->
+      <el-select v-model="form2.roleRid" placeholder="请选择角色名" clearable>
+        <el-option v-for="item in options" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
       </el-select>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="showEdit2 = false">取 消</el-button>
-    <el-button type="primary" @click="showEdit2 = false">确 定</el-button>
+    <el-button type="primary" @click="sureAssign">确 定</el-button>
   </div>
 </el-dialog>
 <!-- 添加用户 -->
@@ -109,12 +109,6 @@
     <el-button @click="cancelAdd">取 消</el-button>
     <el-button type="primary" @click="sureAdd(form3)">确 定</el-button>
   </div>
-  <!-- <template v-slot:footer>
-    <div class="dialog-footer">
-    <el-button @click="cancelAdd">取 消</el-button>
-    <el-button type="primary" @click="sureAdd(form3)">确 定</el-button>
-  </div>
-  </template> -->
 </el-dialog>
   </div>
 </template>
@@ -124,6 +118,7 @@
 export default {
   data () {
     return {
+      options: [],
       id: null,
       // url: 'http://localhost:8888/api/private/v1/users/',
       query: '',
@@ -147,7 +142,10 @@ export default {
       },
       form2: {
         user: '',
-        region: ''
+        // 角色id
+        roleRid: '',
+        // 用户id
+        id: ''
       },
       form3: {
         username: '',
@@ -312,9 +310,50 @@ export default {
     },
     // 分配用户
     assigningUser (info) {
+      this.form2.id = info.id
+      this.form2.user = info.username
       console.log(info)
       this.showEdit2 = true
-      this.form2.user = info.username
+      // 根据个人id查询不同的角色id
+      this.$axios.get(`users/${info.id}`).then(res => {
+        console.log(res)
+        const { data, meta } = res
+        if (meta.status === 200) {
+          // 如果是新添加用户，默认没有角色，就是-1  如果为空 则显示placholder的内容
+          // console.log(data.rid)
+          this.form2.roleRid = data.rid === -1 ? '' : data.rid
+        }
+      })
+      this.$axios.get('roles').then(res => {
+        console.log(res)
+        const { data, meta } = res
+        if (meta.status === 200) {
+          this.options = data
+        } else {
+          this.$message.error(meta.msg)
+        }
+      })
+    },
+    sureAssign () {
+      // 先判断用户角色id是狗为''
+      const { id, roleRid } = this.form2
+      if (roleRid === '') {
+        this.$message.warning('请选择用户角色')
+      } else {
+        this.$axios.put(`users/${id}/role`, {
+          rid: roleRid
+        }).then(res => {
+          console.log(res)
+          const { meta } = res
+          if (meta.status === 200) {
+            this.$message.success(meta.msg)
+            this.getUserList()
+            this.showEdit2 = false
+          } else {
+            this.$message.error(meta.msg)
+          }
+        })
+      }
     },
     // 添加用户
     addUser () {

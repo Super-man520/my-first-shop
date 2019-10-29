@@ -84,11 +84,13 @@
   </div>
 </el-dialog>
 <!-- 分配权限的弹出框 -->
+<!-- default-expand-all是否展开所有节点 -->
 <el-dialog title="分配权限" :visible.sync="assigningUser" width="30%">
-  <span>这是一段信息</span>
+  <el-tree :data="data" :props="defaultProps" show-checkbox default-expand-all node-key="id" ref="tree"></el-tree>
   <span slot="footer" class="dialog-footer">
+    <el-button type="success" @click="resetChecked">请 空</el-button>
     <el-button @click="assigningUser = false">取 消</el-button>
-    <el-button type="primary" @click="assigningUser = false">确 定</el-button>
+    <el-button type="primary" @click="sureAssigningUser">确 定</el-button>
   </span>
 </el-dialog>
   </div>
@@ -99,6 +101,13 @@
 export default {
   data () {
     return {
+      // 暂存角色id
+      roleId: '',
+      data: [],
+      defaultProps: {
+        children: 'children',
+        label: 'authName'
+      },
       roleList: [],
       showAddRole: false,
       editRole: false,
@@ -252,7 +261,56 @@ export default {
     // 显示分配权限的框
     showAssigning (info) {
       console.log(info)
+      this.roleId = info.id
       this.assigningUser = true
+      this.$axios.get('rights/tree').then(res => {
+        console.log(res)
+        const { data, meta } = res
+        if (meta.status === 200) {
+          this.data = data
+          // 默认选中和获取角色
+          // this.$refs.tree.setCheckedKeys([101])
+          // 需要获取第三级的id进行设置
+          // console.log(info.children)
+          const $id = []
+          info.children.forEach(l1 => {
+            l1.children.forEach(l2 => {
+              l2.children.forEach(item => {
+                $id.push(item.id)
+              })
+            })
+          })
+          console.log($id)
+          this.$refs.tree.setCheckedKeys($id)
+        } else {
+          this.$message.error(meta.msg)
+        }
+      })
+    },
+    sureAssigningUser () {
+      // console.log(this.$refs.tree.getCheckedKeys())
+      // console.log(this.$refs.tree.getHalfCheckedKeys())
+      const id1 = this.$refs.tree.getCheckedKeys()
+      const id2 = this.$refs.tree.getHalfCheckedKeys()
+      // 以 `,` 分割的权限 ID 列表
+      const rids = [...id1, ...id2].join(',')
+      this.$axios.post(`roles/${this.roleId}/rights`, {
+        // rids: rids
+        rids
+      }).then(res => {
+        console.log(res)
+        const { meta } = res
+        if (meta.status === 200) {
+          this.getRolesList()
+          this.assigningUser = false
+        } else {
+          this.$message.error(meta.msg)
+        }
+      })
+    },
+    resetChecked () {
+      this.$refs.tree.setCheckedKeys([])
+      this.sureAssigningUser()
     }
   }
 }
