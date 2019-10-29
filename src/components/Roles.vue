@@ -15,6 +15,7 @@
     <el-table :data="roleList" stripe style="width: 100%">
     <el-table-column type="expand" width="120">
      <template v-slot:default="{ row }">
+       <span v-if="row.children.length===0">暂无权限</span>
        <!-- 栅格系统el-row每一行 el-col代表竖行 共24份-->
        <!-- {{row}} -->
        <!-- 第一层 -->
