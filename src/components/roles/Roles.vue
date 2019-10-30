@@ -191,7 +191,7 @@ export default {
             const { meta } = res
             if (meta.status === 201) {
               this.$message.success('添加成功')
-              // this.$refs.form.resetFields()
+              this.$refs.form.resetFields()
               this.showAddRole = false
               this.getRolesList()
             } else {
