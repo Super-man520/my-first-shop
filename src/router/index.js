@@ -2,15 +2,15 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login.vue'
 import Index from '../components/Index.vue'
-import Users from '../components/Users.vue'
-import Rights from '../components/Rights.vue'
-import Roles from '../components/Roles.vue'
-import Goods from '../components/Goods.vue'
-import Params from '../components/Params.vue'
-import Categories from '../components/Categories.vue'
-import Orders from '../components/Orders.vue'
-import Reports from '../components/Reports.vue'
-import GoodsAdd from '../components/Goods-add.vue'
+import Users from '../components/users/Users.vue'
+import Rights from '../components/roles/Rights.vue'
+import Roles from '../components/roles/Roles.vue'
+import Goods from '../components/products/Goods.vue'
+import Params from '../components/params/Params.vue'
+import Categories from '../components/products/Categories.vue'
+import Orders from '../components/orders/Orders.vue'
+import Reports from '../components/products/Reports.vue'
+import GoodsAdd from '../components/products/Goods-add.vue'
 
 Vue.use(VueRouter)
 
@@ -37,7 +37,7 @@ const routes = [
         //   { path: '/goods-add', name: 'goods-add', component: GoodsAdd }
         // ]
       },
-      { path: '/goods-add', name: 'goods-add', component: GoodsAdd },
+      { path: '/goods-add', name: 'goods', component: GoodsAdd },
       { path: '/params', name: 'params', component: Params },
       { path: '/categories', name: 'categories', component: Categories },
       { path: '/orders', name: 'orders', component: Orders },

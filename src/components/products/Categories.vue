@@ -74,7 +74,8 @@ export default {
       props: {
         label: 'cat_name',
         value: 'cat_id',
-        children: 'children'
+        children: 'children',
+        checkStrictly: true
       },
       loading: false,
       // pagenum 当前页  pagesize每页个数   totalPage总页数
@@ -117,14 +118,18 @@ export default {
           pagesize: this.pagesize
         }
       }).then(res => {
-        this.loading = false
         console.log(res)
         const { data, meta } = res
-        this.categoriesList = data.result
-        this.options = data.result
-        this.$message.success(meta.msg)
-        this.totalPage = data.total
-        // this.children = data.result.children
+        if (meta.status === 200) {
+          this.loading = false
+          this.categoriesList = data.result
+          this.options = data.result
+          this.$message.success(meta.msg)
+          this.totalPage = data.total
+          // this.children = data.result.children
+        } else {
+          this.$message.error(meta.msg)
+        }
       })
     },
     // 分页
@@ -165,7 +170,7 @@ export default {
             const { meta } = res
             if (meta.status === 201) {
               this.$message.success(meta.msg)
-              // this.getCategoriesList()
+              this.getCategoriesList()
               this.addCategories = false
             } else {
               this.$message.error(meta.msg)
