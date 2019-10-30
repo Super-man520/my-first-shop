@@ -10,8 +10,15 @@ import './font/font.less'
 // import './style/index.less'
 import moment from 'moment'
 
+// 引入富文本
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 // 接收router
 import router from './router'
+Vue.use(VueQuillEditor /* { 全局使用 } */)
 // console.log(ElementUI)
 // const { Message } = ElementUI
 // 只要是第三方插件都要使用use
@@ -28,7 +35,7 @@ axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
 Vue.config.productionTip = false
 
 // 过滤器处理时间戳
-Vue.filter('timer', (value, str = 'YYYY-MM-DD  hh:mm:ss') => {
+Vue.filter('timer', (value, str = 'YYYY-MM-DD  HH:mm:ss') => {
   return moment(value * 1000).format(str)
 })
 

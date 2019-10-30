@@ -124,11 +124,11 @@ export default {
       formLabelWidth: '120px',
       rules: {
         roleName: [
-          { required: true, message: '请输入活动名称', trigger: ['blur', 'change'] },
+          { required: true, message: '请输入角色名称', trigger: ['blur', 'change'] },
           { min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: ['blur', 'change'] }
         ],
         roleDesc: [
-          { required: true, message: '请输入活动名称', trigger: ['blur', 'change'] },
+          { required: true, message: '请输入角色描述', trigger: ['blur', 'change'] },
           { min: 6, max: 28, message: '长度在 6 到 28 个字符', trigger: ['blur', 'change'] }
         ]
       }

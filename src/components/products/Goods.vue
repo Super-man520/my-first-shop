@@ -5,7 +5,8 @@
       添加商品
     </el-button>
   <el-table :data="goodsList" stripe style="width: 100%" size="medium">
-    <el-table-column type="index" label="序号" width="200"></el-table-column>
+    <!-- :index="indexMethod"属性可以自定义索引 -->
+    <el-table-column type="index" label="序号" width="200" :index="indexMethod"></el-table-column>
     <el-table-column prop="goods_name" label="商品名称" width="200"></el-table-column>
     <el-table-column prop="goods_price" label="商品价格" width="200"></el-table-column>
     <el-table-column prop="goods_weight" label="商品重量" width="200"></el-table-column>
@@ -27,7 +28,7 @@
   <!-- pagesize每页的个数 current-page当前页-->
    <div class="block">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagenum"
-       :page-sizes="[2, 4, 6, 8]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="totalPage">
+       :page-sizes="[6, 12, 18, 24]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="totalPage">
       </el-pagination>
     </div>
     <!-- 编辑显示的框 -->
@@ -103,6 +104,10 @@ export default {
           this.goodsList = data.goods
         }
       })
+    },
+    // 自定义索引
+    indexMethod (index) {
+      return (this.pagenum - 1) * this.pagesize + index + 1
     },
     // 分页
     handleSizeChange (val) {

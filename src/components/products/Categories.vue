@@ -55,7 +55,8 @@
      <el-form-item label="父级名称" :label-width="formLabelWidth">
         <div class="block">
           <!-- option指定数据  props指定value label    clearable输入框可清空-->
-           <el-cascader v-model="form2.cat_pid" :options="options" @change="handleChange" :props="props" clearable></el-cascader>
+          <!-- 可通过 props.checkStrictly = true 来设置父子节点取消选中关联，从而达到选择任意一级选项的目的。 -->
+           <el-cascader v-model="form2.cat_pid" :options="options" :props="props" clearable></el-cascader>
         </div>
     </el-form-item>
   </el-form>
@@ -84,7 +85,7 @@ export default {
       pagenum: 1,
       pagesize: 3,
       totalPage: null,
-      id: '',
+      // id: '',
       formLabelWidth: '120px',
       editCategories: false,
       addCategories: false,
@@ -94,8 +95,8 @@ export default {
       },
       form2: {
         cat_name: '',
-        cat_pid: []
-        // cat_level: 1
+        cat_pid: [],
+        cat_level: ''
       },
       rules: {
         cat_name: [
@@ -136,6 +137,7 @@ export default {
     handleSizeChange (val) {
       // console.log(`每页 ${val} 条`)
       this.pagesize = val
+      this.pagenum = 1
       this.getCategoriesList()
     },
     handleCurrentChange (val) {
@@ -147,29 +149,30 @@ export default {
     showAddCategories () {
       this.addCategories = true
     },
-    handleChange (val) {
-      console.log(val)
-      // 分类父id
-      this.id = val[0]
-      console.log(this.id)
-    },
+    // handleChange (val) {
+    //   console.log(val)
+    //   // 分类父id
+    //   this.id = val[0]
+    //   console.log(this.id)
+    // },
+    // 添加分类父id就是拿到cat_pid的最后一项  0表示没有父级
     sureAddCategories () {
-      console.log(this.id)
       this.$refs.form2.validate((valid) => {
         if (!valid) {
           this.$message.error('添加失败')
         } else {
           // const cat_level = 1
           this.$axios.post(`categories`, {
-            cat_pid: this.id,
+            cat_pid: this.form2.cat_pid[this.form2.cat_pid.length - 1] || 0,
             cat_name: this.form2.cat_name,
-            // cat_level: this.form2.cat_level
-            cat_level: 1
+            // cat_level就是第几级  0 1 2从0开始
+            cat_level: this.form2.cat_pid.length
           }).then(res => {
             console.log(res)
             const { meta } = res
             if (meta.status === 201) {
               this.$message.success(meta.msg)
+              // if(this.categoriesList)
               this.getCategoriesList()
               this.addCategories = false
             } else {
